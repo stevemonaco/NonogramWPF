@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using NonogramWPF.Model;
 using NonogramWPF.ViewModel;
 
 namespace NonogramWPF
@@ -8,9 +9,6 @@ namespace NonogramWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        /// <summary>
-        /// Initializes a new instance of the MainWindow class.
-        /// </summary>
         public MainWindow()
         {
             InitializeComponent();

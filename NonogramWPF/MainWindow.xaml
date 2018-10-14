@@ -4,29 +4,106 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
+        xmlns:local="clr-namespace:NonogramWPF"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:converters="clr-namespace:NonogramWPF.Converters"
         mc:Ignorable="d ignore"
-        Height="300"
-        Width="300"
-        Title="MVVM Light Application"
+        Height="600"
+        Width="600"
+        Title="Nonogram WPF"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
-    
+
     <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Skins/MainSkin.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <converters:NonogramCellToBrushValueConverter x:Key="cellStateConverter" />
+        <DataTemplate x:Key="rowConstraintsTemplate">
+            <Border BorderBrush="{x:Null}" >
+                <TextBlock Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="columnConstraintsTemplate">
+            <Border BorderBrush="{x:Null}">
+                <TextBlock Text="{Binding}" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+            </Border>
+        </DataTemplate>
     </Window.Resources>
 
-    <Grid x:Name="LayoutRoot">
+    <DockPanel x:Name="dockPanel">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="New" />
+                <MenuItem Header="Open" />
+                <Separator />
+                <MenuItem Header="Exit" />
+            </MenuItem>
+            <MenuItem Header="Restart" />
+            <MenuItem Header="View">
+                <MenuItem Header="Grid Size..." />
+                <MenuItem Header="Font Size..." />
+            </MenuItem>
+        </Menu>
 
-        <TextBlock FontSize="36"
-                   FontWeight="Bold"
-                   Foreground="Purple"
-                   Text="{Binding WelcomeTitle}"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   TextWrapping="Wrap" />
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding PuzzleName, StringFormat=Now Playing: {0}}" />
+            </StatusBarItem>
+            <StatusBarItem HorizontalContentAlignment="Right">
+                <TextBlock Text="{Binding Source={x:Static system:DateTime.Now}, StringFormat=Time: \{0:HH:mm:ss\}}" />
+            </StatusBarItem>
+        </StatusBar>
 
-    </Grid>
+        <Grid DockPanel.Dock="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition MinHeight="10" Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="10" Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Empty Top Left Corner Panel -->
+            <Rectangle Grid.Row="0" Grid.Column="0">
+            </Rectangle>
+
+            <!-- Solution Row Constraints Grid -->
+            <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding SolutionRowConstraints}" ItemTemplate="{StaticResource rowConstraintsTemplate}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="{Binding GridRows}" Columns="1" Margin="0 0 5 0" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- Solution Column Constraints Grid -->
+            <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding SolutionColumnConstraints}" ItemTemplate="{StaticResource columnConstraintsTemplate}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="1" Columns="{Binding GridColumns}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- Main Nonogram Grid -->
+            <ItemsControl Grid.Row="1" Grid.Column="1" x:Name="_board" ItemsSource="{Binding Board}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="{Binding GridRows}" Columns="{Binding GridColumns}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Background="{Binding Converter={StaticResource cellStateConverter}}">
+                            <Button.InputBindings>
+                                <MouseBinding Gesture="LeftClick" Command="{Binding DataContext.ToggleCellFilled, ElementName=dockPanel}" CommandParameter="{Binding}" />
+                                <MouseBinding Gesture="RightClick" Command="{Binding DataContext.ToggleCellEmpty, ElementName=dockPanel}" CommandParameter="{Binding}" />
+                            </Button.InputBindings>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </Grid>
+    </DockPanel>
+
 </Window>
