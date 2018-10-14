@@ -14,7 +14,7 @@
         DataContext="{Binding Main, Source={StaticResource Locator}}">
 
     <Window.Resources>
-        <converters:NonogramCellToBrushValueConverter x:Key="cellStateConverter" />
+        <converters:CellStateToBrushValueConverter x:Key="cellStateConverter" />
         <DataTemplate x:Key="rowConstraintsTemplate">
             <Border BorderBrush="{x:Null}" >
                 <TextBlock Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Right" />
@@ -93,7 +93,7 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Background="{Binding Converter={StaticResource cellStateConverter}}">
+                        <Button Background="{Binding CellState, Converter={StaticResource cellStateConverter}}">
                             <Button.InputBindings>
                                 <MouseBinding Gesture="LeftClick" Command="{Binding DataContext.ToggleCellFilled, ElementName=dockPanel}" CommandParameter="{Binding}" />
                                 <MouseBinding Gesture="RightClick" Command="{Binding DataContext.ToggleCellEmpty, ElementName=dockPanel}" CommandParameter="{Binding}" />

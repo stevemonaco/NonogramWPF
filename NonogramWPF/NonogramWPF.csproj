@@ -83,7 +83,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Converters\NonogramCellToBrushValueConverter.cs" />
+    <Compile Include="Converters\CellStateToBrushValueConverter.cs" />
     <Compile Include="Model\LineConstraint.cs" />
     <Compile Include="Model\NonogramCell.cs" />
     <Compile Include="Model\NonogramMatrix.cs" />
