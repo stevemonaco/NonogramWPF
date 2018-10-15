@@ -28,21 +28,21 @@ namespace NonogramWPF.ViewModel
         public ObservableCollection<NonogramCell> Board
         {
             get => board;
-            set => Set(nameof(Board), ref board, value);
+            set => Set(ref board, value);
         }
 
         private TimeSpan timeElapsed;
         public TimeSpan TimeElapsed
         {
             get => timeElapsed;
-            set => Set(nameof(TimeElapsed), ref timeElapsed, value);
+            set => Set(ref timeElapsed, value);
         }
 
         private string puzzleName = "";
         public string PuzzleName
         {
             get => puzzleName;
-            set => Set(nameof(PuzzleName), ref puzzleName, value);
+            set => Set(ref puzzleName, value);
         }
 
         public IEnumerable<string> SolutionRowConstraints
