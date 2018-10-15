@@ -85,6 +85,7 @@ namespace NonogramWPF.Model
                     return false;
             }
 
+            IsGameActive = false;
             return true;
         }
 
@@ -110,6 +111,10 @@ namespace NonogramWPF.Model
                 }
                 if(run > 0)
                     constraint.Add(run);
+
+                if (constraint.Items.Count == 0)
+                    constraint.Add(0);
+
                 RowConstraints.Add(constraint);
             }
 
@@ -130,19 +135,23 @@ namespace NonogramWPF.Model
                 }
                 if (run > 0)
                     constraint.Add(run);
+
+                if (constraint.Items.Count == 0)
+                    constraint.Add(0);
+
                 ColumnConstraints.Add(constraint);
             }
         }
 
         public void ResetMatrixStates()
         {
-            for (int row = 0; row < Rows; row++)
+            for (int y = 0; y < Rows; y++)
             {
-                for (int col = 0; col < Columns; col++)
+                for (int x = 0; x < Columns; x++)
                 {
                     var cell = new NonogramCell();
                     cell.CellState = CellState.Undetermined;
-                    Cells[row, col] = cell;
+                    Cells[x, y] = cell;
                 }
             }
         }

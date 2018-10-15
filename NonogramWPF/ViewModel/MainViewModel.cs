@@ -169,6 +169,8 @@ namespace NonogramWPF.ViewModel
 
             Board = new ObservableCollection<NonogramCell>(game.Board);
             PuzzleName = Path.GetFileNameWithoutExtension(puzzleFileName);
+            RaisePropertyChanged(nameof(GridRows));
+            RaisePropertyChanged(nameof(GridColumns));
             RaisePropertyChanged(nameof(SolutionRowConstraints));
             RaisePropertyChanged(nameof(SolutionColumnConstraints));
 

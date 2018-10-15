@@ -74,7 +74,7 @@
             <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding SolutionRowConstraints}" ItemTemplate="{StaticResource rowConstraintsTemplate}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Rows="{Binding GridRows}" Columns="1" Margin="0 0 5 0" />
+                        <UniformGrid Rows="{Binding GridRows}" Columns="1" Margin="5 0 5 0" MinWidth="10" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
@@ -83,7 +83,7 @@
             <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding SolutionColumnConstraints}" ItemTemplate="{StaticResource columnConstraintsTemplate}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Rows="1" Columns="{Binding GridColumns}" />
+                        <UniformGrid  Rows="1" Columns="{Binding GridColumns}" Margin="0 5 0 5" MinHeight="10" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
