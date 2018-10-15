@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
         xmlns:local="clr-namespace:NonogramWPF"
+        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:converters="clr-namespace:NonogramWPF.Converters"
         mc:Ignorable="d ignore"
@@ -15,6 +16,7 @@
 
     <Window.Resources>
         <converters:CellStateToBrushValueConverter x:Key="cellStateConverter" />
+        <converters:TimeSpanToTimerStringConverter x:Key="timeSpanTimerStringConverter" />
         <DataTemplate x:Key="rowConstraintsTemplate">
             <Border BorderBrush="{x:Null}" >
                 <TextBlock Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Right" />
@@ -30,10 +32,10 @@
     <DockPanel x:Name="dockPanel">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="New" />
-                <MenuItem Header="Open" />
+                <MenuItem Header="New" IsEnabled="False"/>
+                <MenuItem Header="Open" Command="{Binding OpenPuzzle}" />
                 <Separator />
-                <MenuItem Header="Exit" />
+                <MenuItem Header="Exit" Command="{Binding CloseApplication}" />
             </MenuItem>
             <MenuItem Header="Restart" />
             <MenuItem Header="View">
@@ -47,7 +49,7 @@
                 <TextBlock Text="{Binding PuzzleName, StringFormat=Now Playing: {0}}" />
             </StatusBarItem>
             <StatusBarItem HorizontalContentAlignment="Right">
-                <TextBlock Text="{Binding Source={x:Static system:DateTime.Now}, StringFormat=Time: \{0:HH:mm:ss\}}" />
+                <TextBlock Text="{Binding TimeElapsed, Converter={StaticResource timeSpanTimerStringConverter}}" />
             </StatusBarItem>
         </StatusBar>
 
