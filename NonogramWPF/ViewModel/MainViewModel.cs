@@ -6,6 +6,7 @@ using System.IO;
 using GalaSoft.MvvmLight;
 using NonogramWPF.Model;
 using GalaSoft.MvvmLight.Command;
+using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using Microsoft.Win32;
@@ -37,7 +38,12 @@ namespace NonogramWPF.ViewModel
             set => Set(nameof(TimeElapsed), ref timeElapsed, value);
         }
 
-        public string PuzzleName { get; set; } = "";
+        private string puzzleName = "";
+        public string PuzzleName
+        {
+            get => puzzleName;
+            set => Set(nameof(PuzzleName), ref puzzleName, value);
+        }
 
         public IEnumerable<string> SolutionRowConstraints
         {
@@ -80,6 +86,7 @@ namespace NonogramWPF.ViewModel
 
         public RelayCommand<NonogramCell> ToggleCellFilled { get; }
         public RelayCommand<NonogramCell> ToggleCellEmpty { get; }
+        public RelayCommand<NonogramCell> CellMouseEnter { get; }
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -89,15 +96,20 @@ namespace NonogramWPF.ViewModel
             OpenPuzzle = new RelayCommand(() => OnOpenNewPuzzle());
             CloseApplication = new RelayCommand(() => OnCloseApplication());
 
-            ToggleCellFilled = new RelayCommand<NonogramCell>((cellState) =>
+            ToggleCellFilled = new RelayCommand<NonogramCell>((cell) =>
             {
-                OnToggleCellFilled(cellState);
+                OnToggleCellFilled(cell);
             }, (cellState) => !IsSolved);
 
-            ToggleCellEmpty = new RelayCommand<NonogramCell>((cellState) =>
+            ToggleCellEmpty = new RelayCommand<NonogramCell>((cell) =>
             {
-                OnToggleCellEmpty(cellState);
+                OnToggleCellEmpty(cell);
             }, (cellState) => !IsSolved);
+
+            CellMouseEnter = new RelayCommand<NonogramCell>((cell) =>
+            {
+                OnCellMouseEnter(cell);
+            });
         }
 
         private void OnOpenNewPuzzle()
@@ -139,6 +151,14 @@ namespace NonogramWPF.ViewModel
 
             if (game.CheckWinState())
                 PuzzleSolved();
+        }
+
+        private void OnCellMouseEnter(NonogramCell cell)
+        {
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+                OnToggleCellFilled(cell);
+            else if(Mouse.RightButton == MouseButtonState.Pressed)
+                OnToggleCellEmpty(cell);
         }
 
         private void LoadPuzzle(string puzzleFileName)

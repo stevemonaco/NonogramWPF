@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:NonogramWPF"
         xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:converters="clr-namespace:NonogramWPF.Converters"
         mc:Ignorable="d ignore"
         Height="600"
@@ -43,6 +44,8 @@
                 <MenuItem Header="Font Size..." />
             </MenuItem>
         </Menu>
+        
+        <!-- StatusBar -->
 
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
@@ -100,6 +103,11 @@
                                 <MouseBinding Gesture="LeftClick" Command="{Binding DataContext.ToggleCellFilled, ElementName=dockPanel}" CommandParameter="{Binding}" />
                                 <MouseBinding Gesture="RightClick" Command="{Binding DataContext.ToggleCellEmpty, ElementName=dockPanel}" CommandParameter="{Binding}" />
                             </Button.InputBindings>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseEnter">
+                                    <i:InvokeCommandAction Command="{Binding DataContext.CellMouseEnter, ElementName=dockPanel}" CommandParameter="{Binding}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
