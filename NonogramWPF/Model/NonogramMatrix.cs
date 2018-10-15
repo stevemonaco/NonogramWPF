@@ -21,6 +21,8 @@ namespace NonogramWPF.Model
 
         public NonogramCell[,] Cells { get; set; } = new NonogramCell[0, 0];
 
+        public bool IsGameActive { get; private set; } = false;
+
         public NonogramMatrix()
         {
         }
@@ -56,6 +58,7 @@ namespace NonogramWPF.Model
             int.TryParse(columnConstraints.Attribute("count").Value, out var columnConstraintsCount);
 
             InitializeBoard(columnConstraintsCount, rowConstraintsCount);
+            IsGameActive = true;
 
             return true;
         }
@@ -64,6 +67,25 @@ namespace NonogramWPF.Model
         {
             Cells = new NonogramCell[x, y];
             ResetMatrixStates();
+        }
+
+        public bool CheckWinState()
+        {
+            BuildConstraints();
+
+            for(int i = 0; i < RowConstraints.Count; i++)
+            {
+                if (!SolutionRowConstraints[i].Equals(RowConstraints[i]))
+                    return false;
+            }
+
+            for (int i = 0; i < ColumnConstraints.Count; i++)
+            {
+                if (!SolutionColumnConstraints[i].Equals(ColumnConstraints[i]))
+                    return false;
+            }
+
+            return true;
         }
 
         public void BuildConstraints()
@@ -135,10 +157,13 @@ namespace NonogramWPF.Model
 
         public void SetState(int x, int y, CellState cs)
         {
-            if (x < Columns && y < Rows)
-                Cells[x, y].CellState = cs;
-            else
-                throw new IndexOutOfRangeException();
+            if (IsGameActive)
+            {
+                if (x < Columns && y < Rows)
+                    Cells[x, y].CellState = cs;
+                else
+                    throw new IndexOutOfRangeException();
+            }
         }
 
         public IEnumerable<NonogramCell> Board

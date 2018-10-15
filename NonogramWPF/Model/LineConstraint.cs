@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NonogramWPF.Model
 {
-    public class LineConstraint
+    public class LineConstraint : IEquatable<LineConstraint>
     {
         public List<int> Items { get; private set; } = new List<int>();
 
@@ -23,5 +23,18 @@ namespace NonogramWPF.Model
             Items.Add(constraint);
         }
 
+        public bool Equals(LineConstraint other)
+        {
+            if (Items.Count != other.Items.Count)
+                return false;
+
+            for (int i = 0; i < Items.Count; i++)
+            {
+                if (Items[i] != other.Items[i])
+                    return false;
+            }
+
+            return true;
+        }
     }
 }
