@@ -5,7 +5,6 @@ using System.Windows.Data;
 using System.Windows.Media;
 using NonogramWPF.Model;
 
-
 namespace NonogramWPF.Converters
 {
     class CellStateToBrushValueConverter : IValueConverter

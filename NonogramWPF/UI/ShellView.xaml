@@ -1,0 +1,52 @@
+﻿<Window
+    x:Class="NonogramWPF.Views.ShellView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:NonogramWPF.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:NonogramWPF.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    Title="ShellView"
+    Width="800"
+    Height="450"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <converters:TimeSpanToTimerStringConverter x:Key="timeSpanTimerStringConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <!--  Menu  -->
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="New" IsEnabled="False" />
+                <MenuItem Command="{s:Action OpenPuzzle}" Header="Open" />
+                <Separator />
+                <MenuItem Command="{s:Action ExitApplication}" Header="Exit" />
+            </MenuItem>
+            <MenuItem Header="Restart" />
+            <MenuItem Header="View">
+                <MenuItem Header="Grid Size..." />
+                <MenuItem Header="Font Size..." />
+            </MenuItem>
+        </Menu>
+
+        <!--  Nonogram Area  -->
+        <ContentControl Grid.Row="1" s:View.Model="{Binding NonogramBoard}" />
+
+        <!--  Status Bar  -->
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <TextBlock Text="{Binding PuzzleName, StringFormat=Now Playing: {0}}" />
+            </StatusBarItem>
+            <StatusBarItem HorizontalContentAlignment="Right">
+                <TextBlock Text="{Binding TimeElapsed, Converter={StaticResource timeSpanTimerStringConverter}}" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

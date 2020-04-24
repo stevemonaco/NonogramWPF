@@ -9,10 +9,7 @@ namespace NonogramWPF.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is null)
-                throw new ArgumentNullException(nameof(value));
-
-            if (!(value is TimeSpan))
-                throw new ArgumentException($"Cannot convert from {value.GetType()} to {typeof(TimeSpan)}", nameof(value));
+                return Binding.DoNothing;
 
             if (!targetType.IsAssignableFrom(typeof(string)))
                 throw new ArgumentException($"Cannot convert from {typeof(string)} to {targetType}", nameof(targetType));

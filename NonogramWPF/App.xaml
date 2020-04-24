@@ -1,19 +1,20 @@
-﻿<Application x:Class="NonogramWPF.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="clr-namespace:NonogramWPF.ViewModel"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:ignore="http://www.galasoft.ch/ignore"
-             StartupUri="MainWindow.xaml"
-             mc:Ignorable="d ignore">
-    
+﻿<Application
+    x:Class="NonogramWPF.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:NonogramWPF"
+    xmlns:s="https://github.com/canton7/Stylet">
     <Application.Resources>
-        <!--Global View Model Locator-->
         <ResourceDictionary>
-            <vm:ViewModelLocator x:Key="Locator"
-                             d:IsDataSource="True" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <s:ApplicationLoader x:Key="Bootstrapper">
+                        <s:ApplicationLoader.Bootstrapper>
+                            <local:NonogramBootstrapper />
+                        </s:ApplicationLoader.Bootstrapper>
+                    </s:ApplicationLoader>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
-    
 </Application>
