@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 
-namespace NonogramWPF
+namespace Nonogram.WPF
 {
     /// <summary>
     /// Bootstrapper base for Autofac IoC

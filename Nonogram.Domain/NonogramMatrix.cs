@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NonogramWPF.Model
+namespace Nonogram.Domain
 {
     public class NonogramMatrix
     {
@@ -39,7 +36,7 @@ namespace NonogramWPF.Model
             var root = XElement.Load(fileName);
 
             var rowConstraints = root.Element("RowConstraints");
-            foreach(var el in rowConstraints.Descendants())
+            foreach (var el in rowConstraints.Descendants())
             {
                 var vals = el.Value.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries).Where(x => int.TryParse(x, out _));
                 var constraints = new LineConstraint(vals.Select(x => int.Parse(x)));
@@ -73,7 +70,7 @@ namespace NonogramWPF.Model
         {
             BuildConstraints();
 
-            for(int i = 0; i < RowConstraints.Count; i++)
+            for (int i = 0; i < RowConstraints.Count; i++)
             {
                 if (!SolutionRowConstraints[i].Equals(RowConstraints[i]))
                     return false;
@@ -95,21 +92,21 @@ namespace NonogramWPF.Model
             ColumnConstraints.Clear();
 
             // Build Row Constraints
-            for(int y = 0; y < Rows; y++)
+            for (int y = 0; y < Rows; y++)
             {
                 LineConstraint constraint = new LineConstraint();
                 int run = 0;
-                for(int x = 0; x < Columns; x++)
+                for (int x = 0; x < Columns; x++)
                 {
                     if (Cells[x, y].CellState == CellState.Filled)
                         run++;
-                    else if(run > 0)
+                    else if (run > 0)
                     {
                         constraint.Add(run);
                         run = 0;
                     }
                 }
-                if(run > 0)
+                if (run > 0)
                     constraint.Add(run);
 
                 if (constraint.Items.Count == 0)
@@ -149,9 +146,7 @@ namespace NonogramWPF.Model
             {
                 for (int x = 0; x < Columns; x++)
                 {
-                    var cell = new NonogramCell();
-                    cell.CellState = CellState.Undetermined;
-                    Cells[x, y] = cell;
+                    Cells[x, y] = new NonogramCell(CellState.Undetermined, y, x);
                 }
             }
         }
@@ -172,6 +167,30 @@ namespace NonogramWPF.Model
                     Cells[x, y].CellState = cs;
                 else
                     throw new IndexOutOfRangeException();
+            }
+            else
+                throw new InvalidOperationException();
+        }
+
+        public IEnumerable<NonogramCell> GetRowCells(int n)
+        {
+            if (n >= Cells.GetLength(1))
+                throw new IndexOutOfRangeException();
+            
+            for (int x = 0; x < Cells.GetLength(0); x++)
+            {
+                yield return Cells[x, n];
+            }
+        }
+
+        public IEnumerable<NonogramCell> GetColumnCells(int n)
+        {
+            if (n >= Cells.GetLength(0))
+                throw new IndexOutOfRangeException();
+
+            for (int y = 0; y < Cells.GetLength(1); y++)
+            {
+                yield return Cells[n, y];
             }
         }
 

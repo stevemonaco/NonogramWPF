@@ -3,18 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Threading;
-using NonogramWPF.Model;
+using Nonogram.Domain;
 using System.Linq;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows.Input;
+using Nonogram.WPF.EventModels;
 
-namespace NonogramWPF.ViewModels
+namespace Nonogram.WPF.ViewModels
 {
     class NonogramBoardViewModel : Screen
     {
-        private NonogramMatrix _board = new NonogramMatrix();
-        private bool IsSolved = false;
+        private readonly NonogramMatrix _board;
+        private readonly IEventAggregator _events;
 
         private int _gridColumns;
         public int GridColumns
@@ -37,18 +38,18 @@ namespace NonogramWPF.ViewModels
             set => SetAndNotify(ref board, value);
         }
 
-        private TimeSpan timeElapsed;
-        public TimeSpan TimeElapsed
-        {
-            get => timeElapsed;
-            set => SetAndNotify(ref timeElapsed, value);
-        }
-
         private string puzzleName = "";
         public string PuzzleName
         {
             get => puzzleName;
             set => SetAndNotify(ref puzzleName, value);
+        }
+
+        private bool _isSolved;
+        public bool IsSolved
+        {
+            get => _isSolved;
+            set => SetAndNotify(ref _isSolved, value);
         }
 
         public IEnumerable<string> SolutionRowConstraints
@@ -87,16 +88,11 @@ namespace NonogramWPF.ViewModels
             }
         }
 
-        //public RelayCommand OpenPuzzle { get; }
-        //public RelayCommand CloseApplication { get; }
-
-        //public RelayCommand<NonogramCell> ToggleCellFilled { get; }
-        //public RelayCommand<NonogramCell> ToggleCellEmpty { get; }
-        //public RelayCommand<NonogramCell> CellMouseEnter { get; }
-
-        public NonogramBoardViewModel(NonogramMatrix board)
+        public NonogramBoardViewModel(NonogramMatrix board, IEventAggregator events)
         {
             _board = board;
+            _events = events;
+
             Board = new BindableCollection<NonogramCell>(_board.Board);
             GridRows = _board.Rows;
             GridColumns = _board.Columns;
@@ -107,6 +103,9 @@ namespace NonogramWPF.ViewModels
 
         public void ToggleCellFilled(NonogramCell cell)
         {
+            if (IsSolved)
+                return;
+
             if (cell.CellState == CellState.Filled)
                 cell.CellState = CellState.Undetermined;
             else
@@ -118,6 +117,9 @@ namespace NonogramWPF.ViewModels
 
         public void ToggleCellEmpty(NonogramCell cell)
         {
+            if (IsSolved)
+                return;
+
             if (cell.CellState == CellState.Empty)
                 cell.CellState = CellState.Undetermined;
             else
@@ -129,6 +131,12 @@ namespace NonogramWPF.ViewModels
 
         public void CellMouseEnter(NonogramCell cell)
         {
+            if (IsSolved)
+                return;
+
+            if (Mouse.LeftButton == MouseButtonState.Pressed && Mouse.RightButton == MouseButtonState.Pressed)
+                return;
+
             if (Mouse.LeftButton == MouseButtonState.Pressed)
                 ToggleCellFilled(cell);
             else if (Mouse.RightButton == MouseButtonState.Pressed)
@@ -138,6 +146,10 @@ namespace NonogramWPF.ViewModels
         public void PuzzleSolved()
         {
             IsSolved = true;
+            _events.PublishOnUIThread(new GameWinEventModel());
+
+            foreach (var cell in Board.Where(x => x.CellState != CellState.Filled))
+                cell.CellState = CellState.Undetermined;
         }
     }
 }

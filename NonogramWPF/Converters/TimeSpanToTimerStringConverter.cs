@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace NonogramWPF.Converters
+namespace Nonogram.WPF.Converters
 {
-    public class TimeSpanToTimerStringConverter : IValueConverter
+    class TimeSpanToTimerStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

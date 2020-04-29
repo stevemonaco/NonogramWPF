@@ -1,9 +1,9 @@
-﻿using NonogramWPF.ViewModels;
+﻿using Nonogram.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NonogramWPF
+namespace Nonogram.WPF
 {
     class NonogramBootstrapper : AutofacBootstrapper<ShellViewModel>
     {

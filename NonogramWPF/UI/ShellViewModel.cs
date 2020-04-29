@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
-using NonogramWPF.Model;
+using Nonogram.WPF.EventModels;
+using Nonogram.Domain;
 using Stylet;
 using System;
 using System.Collections.Generic;
@@ -7,10 +8,11 @@ using System.IO;
 using System.Text;
 using System.Windows.Threading;
 
-namespace NonogramWPF.ViewModels
+namespace Nonogram.WPF.ViewModels
 {
-    class ShellViewModel : Screen
+    class ShellViewModel : Screen, IHandle<GameWinEventModel>
     {
+        private readonly IEventAggregator _events;
         private readonly DispatcherTimer _timer = new DispatcherTimer();
         private DateTime _startTime;
 
@@ -35,6 +37,12 @@ namespace NonogramWPF.ViewModels
             set => SetAndNotify(ref _puzzleName, value);
         }
 
+        public ShellViewModel(IEventAggregator events)
+        {
+            _events = events;
+            _events.Subscribe(this);
+        }
+
         public void OpenPuzzle()
         {
             var ofd = new OpenFileDialog();
@@ -50,7 +58,7 @@ namespace NonogramWPF.ViewModels
                 var board = new NonogramMatrix();
                 board.LoadFromXml(ofd.FileName);
 
-                var vm = new NonogramBoardViewModel(board);
+                var vm = new NonogramBoardViewModel(board, _events);
                 NonogramBoard = vm;
                 PuzzleName = Path.GetFileNameWithoutExtension(ofd.FileName);
 
@@ -72,6 +80,12 @@ namespace NonogramWPF.ViewModels
         private void Timer_Tick(object sender, EventArgs e)
         {
             TimeElapsed = DateTime.Now - _startTime;
+        }
+
+        public void Handle(GameWinEventModel message)
+        {
+            TimeElapsed = DateTime.Now - _startTime;
+            _timer.Stop();
         }
     }
 }
