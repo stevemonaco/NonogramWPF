@@ -1,0 +1,59 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Nonogram.WPF.Styles">
+
+    <LinearGradientBrush x:Key="defaultCellFilledBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="Navy" />
+        <GradientStop Offset="1.0" Color="AliceBlue" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="defaultCellEmptyBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="Salmon" />
+        <GradientStop Offset="1.0" Color="White" />
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="defaultCellUndeterminedBrush0" Color="#DEE7FF" />
+    <SolidColorBrush x:Key="defaultCellUndeterminedBrush1" Color="#EFF7FF" />
+    <SolidColorBrush x:Key="defaultCellUndeterminedBrush2" Color="White" />
+
+    <Style x:Key="cellStyle" TargetType="Rectangle">
+        <Setter Property="RadiusX" Value="4" />
+        <Setter Property="RadiusY" Value="4" />
+        <Style.Triggers>
+            <DataTrigger Value="0">
+                <DataTrigger.Binding>
+                    <MultiBinding Converter="{StaticResource mathConverter}" ConverterParameter="[0] % 2 + [1] % 2">
+                        <Binding Path="Row" />
+                        <Binding Path="Column" />
+                    </MultiBinding>
+                </DataTrigger.Binding>
+                <Setter Property="Fill" Value="{StaticResource defaultCellUndeterminedBrush0}" />
+            </DataTrigger>
+            <DataTrigger Value="1">
+                <DataTrigger.Binding>
+                    <MultiBinding Converter="{StaticResource mathConverter}" ConverterParameter="[0] % 2 + [1] % 2">
+                        <Binding Path="Row" />
+                        <Binding Path="Column" />
+                    </MultiBinding>
+                </DataTrigger.Binding>
+                <Setter Property="Fill" Value="{StaticResource defaultCellUndeterminedBrush1}" />
+            </DataTrigger>
+            <DataTrigger Value="2">
+                <DataTrigger.Binding>
+                    <MultiBinding Converter="{StaticResource mathConverter}" ConverterParameter="[0] % 2 + [1] % 2">
+                        <Binding Path="Row" />
+                        <Binding Path="Column" />
+                    </MultiBinding>
+                </DataTrigger.Binding>
+                <Setter Property="Fill" Value="{StaticResource defaultCellUndeterminedBrush2}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CellState}" Value="Empty">
+                <Setter Property="Fill" Value="{StaticResource defaultCellEmptyBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CellState}" Value="Filled">
+                <Setter Property="Fill" Value="{StaticResource defaultCellFilledBrush}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

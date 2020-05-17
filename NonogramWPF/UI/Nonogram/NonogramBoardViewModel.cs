@@ -12,10 +12,12 @@ using Nonogram.WPF.EventModels;
 
 namespace Nonogram.WPF.ViewModels
 {
+    public enum CellTransition { None, ToUndetermined, ToEmpty, ToFilled }
     class NonogramBoardViewModel : Screen
     {
         private readonly NonogramMatrix _board;
         private readonly IEventAggregator _events;
+        private CellTransition _transition;
 
         private int _gridColumns;
         public int GridColumns
@@ -106,13 +108,8 @@ namespace Nonogram.WPF.ViewModels
             if (IsSolved)
                 return;
 
-            if (cell.CellState == CellState.Filled)
-                cell.CellState = CellState.Undetermined;
-            else
-                cell.CellState = CellState.Filled;
-
-            if (_board.CheckWinState())
-                PuzzleSolved();
+            _transition = cell.CellState == CellState.Filled ? CellTransition.ToUndetermined : CellTransition.ToFilled;
+            ApplyCellTransition(cell);
         }
 
         public void ToggleCellEmpty(NonogramCell cell)
@@ -120,13 +117,8 @@ namespace Nonogram.WPF.ViewModels
             if (IsSolved)
                 return;
 
-            if (cell.CellState == CellState.Empty)
-                cell.CellState = CellState.Undetermined;
-            else
-                cell.CellState = CellState.Empty;
-
-            if (_board.CheckWinState())
-                PuzzleSolved();
+            _transition = cell.CellState == CellState.Empty ? CellTransition.ToUndetermined : CellTransition.ToEmpty;
+            ApplyCellTransition(cell);
         }
 
         public void CellMouseEnter(NonogramCell cell)
@@ -134,13 +126,23 @@ namespace Nonogram.WPF.ViewModels
             if (IsSolved)
                 return;
 
-            if (Mouse.LeftButton == MouseButtonState.Pressed && Mouse.RightButton == MouseButtonState.Pressed)
-                return;
+             if ((Mouse.LeftButton == MouseButtonState.Pressed ^ Mouse.RightButton == MouseButtonState.Pressed)
+                && _transition != CellTransition.None)
+                ApplyCellTransition(cell);
+        }
 
-            if (Mouse.LeftButton == MouseButtonState.Pressed)
-                ToggleCellFilled(cell);
-            else if (Mouse.RightButton == MouseButtonState.Pressed)
-                ToggleCellEmpty(cell);
+        private void ApplyCellTransition(NonogramCell cell)
+        {
+            cell.CellState = _transition switch
+            {
+                CellTransition.ToUndetermined => CellState.Undetermined,
+                CellTransition.ToEmpty => CellState.Empty,
+                CellTransition.ToFilled => CellState.Filled,
+                _ => throw new InvalidOperationException($"{nameof(ApplyCellTransition)} attempted to apply invalid transition {_transition}")
+            };
+
+            if (_board.CheckWinState())
+                PuzzleSolved();
         }
 
         public void PuzzleSolved()

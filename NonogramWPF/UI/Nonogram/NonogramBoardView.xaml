@@ -14,121 +14,12 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <converters:CellToBrushConverter x:Key="cellBrushConverter" />
-
-        <Style x:Key="constraintTextStyle" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="Courier New" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="TextBlock.Effect">
-                <Setter.Value>
-                    <DropShadowEffect
-                        BlurRadius="4"
-                        Direction="315"
-                        Opacity="0.5"
-                        ShadowDepth="3"
-                        Color="Black" />
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="gridBorderStyle" TargetType="Border">
-            <Setter Property="BorderThickness" Value="4" />
-            <Setter Property="BorderBrush" Value="Black" />
-            <Setter Property="CornerRadius" Value="2" />
-        </Style>
-
-        <Style x:Key="cellInnerBorderStyle" TargetType="Border">
-            <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="BorderBrush" Value="Black" />
-            <Setter Property="CornerRadius" Value="4" />
-        </Style>
-
-        <Style x:Key="cellStyle" TargetType="Rectangle">
-            <Setter Property="RadiusX" Value="4" />
-            <Setter Property="RadiusY" Value="4" />
-            <Style.Triggers>
-                <DataTrigger Value="0">
-                    <DataTrigger.Binding>
-                        <MultiBinding Converter="{StaticResource mathConverter}" ConverterParameter="[0] % 2 + [1] % 2">
-                            <Binding Path="Row" />
-                            <Binding Path="Column" />
-                        </MultiBinding>
-                    </DataTrigger.Binding>
-                    <Setter Property="Fill" Value="#DEE7FF" />
-                </DataTrigger>
-                <DataTrigger Value="1">
-                    <DataTrigger.Binding>
-                        <MultiBinding Converter="{StaticResource mathConverter}" ConverterParameter="[0] % 2 + [1] % 2">
-                            <Binding Path="Row" />
-                            <Binding Path="Column" />
-                        </MultiBinding>
-                    </DataTrigger.Binding>
-                    <Setter Property="Fill" Value="#EFF7FF" />
-                </DataTrigger>
-                <DataTrigger Value="2">
-                    <DataTrigger.Binding>
-                        <MultiBinding Converter="{StaticResource mathConverter}" ConverterParameter="[0] % 2 + [1] % 2">
-                            <Binding Path="Row" />
-                            <Binding Path="Column" />
-                        </MultiBinding>
-                    </DataTrigger.Binding>
-                    <Setter Property="Fill" Value="White" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding CellState}" Value="Empty">
-                    <Setter Property="Fill">
-                        <Setter.Value>
-                            <DrawingBrush>
-                                <DrawingBrush.Drawing>
-                                    <DrawingGroup>
-                                        <GeometryDrawing Brush="CornflowerBlue">
-                                            <GeometryDrawing.Geometry>
-                                                <RectangleGeometry
-                                                    RadiusX="5"
-                                                    RadiusY="5"
-                                                    Rect="0.5,0.5,1,1" />
-                                            </GeometryDrawing.Geometry>
-                                        </GeometryDrawing>
-                                        <DrawingGroup.Transform>
-                                            <ScaleTransform ScaleX="0.5" ScaleY="0.5" />
-                                        </DrawingGroup.Transform>
-                                    </DrawingGroup>
-                                </DrawingBrush.Drawing>
-                            </DrawingBrush>
-                        </Setter.Value>
-                    </Setter>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding CellState}" Value="Filled">
-                    <Setter Property="Fill">
-                        <Setter.Value>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                <GradientStop Offset="0" Color="Navy" />
-                                <GradientStop Offset="1.0" Color="AliceBlue" />
-                            </LinearGradientBrush>
-                        </Setter.Value>
-                    </Setter>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-
-        <DataTemplate x:Key="rowConstraintsTemplate">
-            <Border BorderBrush="{x:Null}">
-                <TextBlock
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource constraintTextStyle}"
-                    Text="{Binding}" />
-            </Border>
-        </DataTemplate>
-        <DataTemplate x:Key="columnConstraintsTemplate">
-            <Border BorderBrush="{x:Null}">
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    Style="{StaticResource constraintTextStyle}"
-                    Text="{Binding}" />
-            </Border>
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/BoardStyles.xaml" />
+                <ResourceDictionary Source="/Styles/CellStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid>
