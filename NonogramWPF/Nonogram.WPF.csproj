@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AdonisUI" Version="1.14.0" />
-    <PackageReference Include="AdonisUI.ClassicTheme" Version="1.14.0" />
-    <PackageReference Include="Autofac" Version="5.1.3" />
+    <PackageReference Include="Autofac" Version="5.2.0" />
     <PackageReference Include="MathConverter" Version="1.2.1.6" />
     <PackageReference Include="Stylet" Version="1.3.2" />
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
+    <PackageReference Include="WpfAnalyzers" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
